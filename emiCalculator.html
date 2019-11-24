@@ -98,7 +98,7 @@
 				cursor: pointer;
 				font-size: 1rem;
 				line-height: 1.5;
-				width:33%;
+				width:50%;
 				float:left;
 				box-sizing: border-box;
 				text-align:center;
@@ -185,13 +185,12 @@
 					</div>
 				</div>
 				<div class="row-input">
-					<label>How many years would you like the loan for?</label>
-					<input type="text" type="number" id="yearRange" value="1" maxlength="2" class="short-input"/>
+					<label>How many month would you like the loan for?</label>
+					<input type="text" type="number" id="yearRange" value="6" maxlength="240" class="short-input"/>
 				</div>
 				<div class="row-input">
-					<label>How often would you like to make payments?</label>
 					<ul class="ul-buttons">
-						<li class="selected" data-value="1">Monthly</li>
+						<li class="selected" data-value="1"> Calculate Rate</li>
 					</ul>
 				</div>
 			</div>
@@ -199,13 +198,13 @@
 				<div id="repayment-total">
 					<div class="heading-title bold">Total interest</div>
 					<div id="repayment-total-value" class="loan-value">
-						$<span id="interest-total">0</span> over <span class="orange-text"><span id="year-value">5</span> years</span>
+						$<span id="interest-total">0</span> over <span class="orange-text"><span id="year-value">5</span> months</span>
 					</div>
 				</div> 
 				<div id="repayment-cycle">
 					<div class="heading-title bold">Payment would be</div>
 					<div id="repayment-cycle-value" class="loan-value">
-						$<span id="repayment-value">0</span> per <span class="orange-text">fortnight</span>
+						$<span id="repayment-value">0</span> per <span class="orange-text">month</span>
 					</div>
 				</div> 
 				
@@ -259,36 +258,8 @@
 				calculateLoan();
 			});
 			
-			//Chart
-			google.charts.load('current', {'packages':['corechart']});
-			function drawChart() {
-				//Hold the loan data array
-				var loanData = [];
-				
-				var dt = new Date();
-				var yearCounter = 1;
-				
-				//Add the graph header
-				var headerData = ['Year', 'Interest', 'Interest & Principal', 'Balance'];
-				loanData.push(headerData);
-				
-				for(var i = dt.getFullYear(); i < dt.getFullYear() + loanYear; i++){
-					loanData.push([i.toString(), getAmortData("interest", 12 * yearCounter), monthlyRepayment * 12 * yearCounter, getAmortData("balance", 12 * yearCounter)]);
-					yearCounter++;
-				}
-				
-				var data = google.visualization.arrayToDataTable(loanData);
+	
 
-				var options = {
-				  title: 'Loan Chart',
-				  hAxis: {title: 'Year',  titleTextStyle: {color: '#333'}},
-				  vAxis: {minValue: 0},
-				  pointsVisible: true
-				};
-
-				var chart = new google.visualization.AreaChart(document.getElementById('graph-chart'));
-				chart.draw(data, options);
-			}
 			
 			//Get amortization data based on type and terms
 			function getAmortData(dataType, terms){
@@ -311,7 +282,7 @@
 				$("#year-value").html(loanYear);
 				var loanBorrow = parseFloat($("#txtLoan").val());
 				var interestRate = parseFloat($("#txtInterest").val()) / 1200;
-				var totalTerms = 12 * loanYear;
+				var totalTerms = loanYear;
 	
 				//Monthly
 				var schedulePayment = Math.round(loanBorrow * interestRate / (1 - (Math.pow(1/(1 + interestRate), totalTerms))));
